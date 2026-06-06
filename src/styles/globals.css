@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* === BASE === */
+    --color-bg:           #0c0c0e;
+    --color-surface:      #141417;
+    --color-elevated:     #1c1c21;
+    --color-border:       #2a2a32;
+    --color-border-soft:  #1e1e26;
+
+    /* === TEXT === */
+    --color-text-primary:   #f2f0ee;
+    --color-text-secondary: #8a8893;
+    --color-text-muted:     #52505c;
+
+    /* === ACCENT — Lavender Indigo === */
+    --color-accent:         #8b7cf8;
+    --color-accent-soft:    #231f40;
+    --color-accent-glow:    rgba(139,124,248,0.15);
+
+    /* === SEMANTIC === */
+    --color-success:    #3ecf8e;
+    --color-warning:    #f5a623;
+    --color-danger:     #f56565;
+    --color-info:       #60a5fa;
+
+    /* === HABIT COLORS === */
+    --habit-rose:       #f472b6;
+    --habit-amber:      #fbbf24;
+    --habit-emerald:    #34d399;
+    --habit-sky:        #38bdf8;
+    --habit-violet:     #a78bfa;
+    --habit-coral:      #fb7185;
+
+    /* === FONTS === */
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body:    'DM Sans', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    /* === SPACING & RADIUS === */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* === SHADOWS === */
+    --shadow-sm:  0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
+    --shadow-accent: 0 0 20px rgba(139,124,248,0.2);
+  }
+
+  [data-theme="light"] {
+    --color-bg:            #f8f7f5;
+    --color-surface:       #ffffff;
+    --color-elevated:      #f0eeec;
+    --color-border:        #e4e2de;
+    --color-border-soft:   #eceae6;
+    --color-text-primary:  #1a1825;
+    --color-text-secondary:#6b6878;
+    --color-text-muted:    #a19ea8;
+    --color-accent:        #7c6ef5;
+    --color-accent-soft:   #ede9ff;
+    --color-accent-glow:   rgba(124,110,245,0.15);
+
+    --shadow-sm:  0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    margin: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-body);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+  }
+}
+
+/* Custom Base Component Classes */
+.card-hover-effect {
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.card-hover-effect:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-text-muted);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary-effect {
+  transition: opacity 150ms, transform 100ms, box-shadow 200ms;
+}
+.btn-primary-effect:hover {
+  opacity: 0.88;
+  box-shadow: var(--shadow-accent);
+}
+.btn-primary-effect:active {
+  transform: scale(0.97);
+}
