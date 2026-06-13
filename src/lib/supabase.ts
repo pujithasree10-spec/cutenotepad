@@ -268,7 +268,6 @@ class MockQueryBuilder {
   }
 
   select(_fields?: string) {
-    this.operation = 'select';
     return this;
   }
 
@@ -388,15 +387,29 @@ class MockQueryBuilder {
     if (this.operation === 'upsert') {
       const rowsToUpsert = Array.isArray(this.payload) ? this.payload : [this.payload];
       for (const row of rowsToUpsert) {
-        const index = data.findIndex((r) => r.id === row.id);
+        let index = -1;
+        if (row.id) {
+          index = data.findIndex((r) => r.id === row.id);
+        } else if (this.tableName === 'mood_logs') {
+          index = data.findIndex((r) => r.user_id === row.user_id && r.logged_at === row.logged_at);
+        } else if (this.tableName === 'habit_logs') {
+          index = data.findIndex((r) => r.habit_id === row.habit_id && r.completed_at === row.completed_at);
+        }
+
+        const id = row.id || (index !== -1 ? data[index].id : crypto.randomUUID());
+        const created_at = row.created_at || (index !== -1 ? data[index].created_at : new Date().toISOString());
+
+        const mergedRow = {
+          id,
+          created_at,
+          ...row,
+          updated_at: new Date().toISOString(),
+        };
+
         if (index !== -1) {
-          data[index] = { ...data[index], ...row, updated_at: new Date().toISOString() };
+          data[index] = mergedRow;
         } else {
-          data.push({
-            id: row.id || crypto.randomUUID(),
-            created_at: row.created_at || new Date().toISOString(),
-            ...row,
-          });
+          data.push(mergedRow);
         }
       }
       this.saveTableData(data);

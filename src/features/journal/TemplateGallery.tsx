@@ -11,152 +11,108 @@ interface TemplateGalleryProps {
 
 const SYSTEM_TEMPLATES = [
   {
-    name: 'Daily Planner',
-    category: 'Productivity',
-    description: 'Structure your day with intentions, schedule, and reflections.',
-    thumbnail: '📅',
+    name: '🌸 Cozy Daily Reflection',
+    category: 'Self-Care',
+    description: 'A soft, sweet space to log your daily mood, tea of the day, gentle wins, and self-care moments.',
+    thumbnail: '🌸',
     content: {
       type: 'doc',
       content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Daily Planner 📅' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: `Date: ${new Date().toLocaleDateString()}` }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: "Today's Intentions ✨" }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '1. Focus on: ' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '2. Take care of: ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Schedule & Timeblocks ⏱️' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• 09:00 - 11:00 : Deep Work Session' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• 11:00 - 12:00 : Admin & Emails' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• 13:00 - 15:00 : Focus Project Task' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Reflections & Notes 📝' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'What went well today? What can I improve tomorrow?' }] }
+        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '🌸 My Cozy Daily Journal' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: `Date: ${new Date().toLocaleDateString()} | Vibe: Cozy & Peaceful` }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🍵 Daily Warmth & Tea' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: "Today's beverage or comforting snack of choice: " }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '✨ Gentle Wins & Happy Moments' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• A small thing that made me smile: ' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• A challenge I met with kindness: ' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🧸 Self-Care Check-in' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• How did I rest today? ' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• Something nice I did for my body or mind: ' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🌙 Bedtime Affirmation' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '"I did my best, and it is safe to rest now."' }] }
       ]
     }
   },
   {
-    name: 'Gratitude Journal',
+    name: '☕ Sweet Morning Routine',
+    category: 'Productivity',
+    description: 'Set a calm, cute, and intentional tone for your morning.',
+    thumbnail: '☕',
+    content: {
+      type: 'doc',
+      content: [
+        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '☕ Sweet Morning Coffee & Intention' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🌻 Today\'s Focus' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• Today I want to focus on: ' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• I will bring gentle energy to: ' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🧺 Warm Morning Steps' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Make my cozy bed 🛏️' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Stretch and take deep breaths 🧘‍♀️' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Sip a warm drink slowly ☕' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Plan my day with kindness 📝' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🌈 Affirmation of the Day' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '"Today is filled with small wonders, and I am ready to welcome them."' }] }
+      ]
+    }
+  },
+  {
+    name: '🙏 Heartfelt Gratitude Log',
     category: 'Mindfulness',
-    description: 'A simple layout to log things and people you appreciate.',
+    description: 'A delicate template to document small details, kind souls, and sweet memories.',
     thumbnail: '🙏',
     content: {
       type: 'doc',
       content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Gratitude Journal 🙏' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Three things I am grateful for today:' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '1. ' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '2. ' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '3. ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Who made me smile today? 😊' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '...' }] }
+        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '🙏 My Heartfelt Gratitude Log' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🌸 Three Tiny Wonders' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '1. A beautiful sound or sight today: ' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '2. A kind interaction or warm smile: ' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '3. A small luxury (like cozy socks, a hot shower, or soft sheets): ' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '💖 A Letter of Appreciation to Myself' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'Dear self, I appreciate that you...' }] }
       ]
     }
   },
   {
-    name: 'Weekly Review',
-    category: 'Productivity',
-    description: 'Reflect on wins, learnings, and plan the upcoming week.',
-    thumbnail: '🗓️',
-    content: {
-      type: 'doc',
-      content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Weekly Review 🗓️' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Big Wins This Week 🏆' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• Win 1: ' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• Win 2: ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Lessons & Adjustments 💡' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'What did I learn? What should I change?' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Upcoming Week Goals 🎯' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• Goal 1: ' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• Goal 2: ' }] }
-      ]
-    }
-  },
-  {
-    name: 'Study Session',
-    category: 'Academics',
-    description: 'Keep track of lectures, summaries, and action items.',
-    thumbnail: '📚',
-    content: {
-      type: 'doc',
-      content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Study Session Notes 📚' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'Subject / Lecture: ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Core Concepts 🧠' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '...' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Key Takeaways & Summaries 📝' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'Summarize concept in 3 sentences:' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Review Questions ❓' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• ' }] }
-      ]
-    }
-  },
-  {
-    name: 'Goal Tracker',
-    category: 'Growth',
-    description: 'Define key milestones, action items, and deadline dates.',
-    thumbnail: '🎯',
-    content: {
-      type: 'doc',
-      content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Goal Blueprint 🎯' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Goal Statement:' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'I want to... by [Deadline]' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Why is this important? 💡' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '...' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Action Plan 📋' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• Milestones & Dates: ' }] }
-      ]
-    }
-  },
-  {
-    name: 'Project Plan',
-    category: 'Productivity',
-    description: 'Outline requirements, tasks, resource links, and scope.',
-    thumbnail: '🚀',
-    content: {
-      type: 'doc',
-      content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Project Plan 🚀' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'Project Name: ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Scope & Description 📝' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'What are we building?' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Tasks Checklist 🛠️' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Resources & Reference Links 🔗' }] }
-      ]
-    }
-  },
-  {
-    name: 'Meeting Notes',
-    category: 'Work',
-    description: 'Track attendees, discussion points, and next steps.',
-    thumbnail: '👥',
-    content: {
-      type: 'doc',
-      content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Meeting Notes 👥' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'Attendees: ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Agenda 📌' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '...' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Discussion Points 💬' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• ' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Action Items 🚀' }] }
-      ]
-    }
-  },
-  {
-    name: 'Reflection Page',
+    name: '🌙 Sleep & Dream Journal',
     category: 'Mindfulness',
-    description: 'Deep self-analysis prompts for emotional alignment.',
-    thumbnail: '🧠',
+    description: 'Log your sleep quality, bedtime rituals, and mystical dreams.',
+    thumbnail: '🌙',
     content: {
       type: 'doc',
       content: [
-        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'Self-Reflection Page 🧠' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Current Emotional State' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: 'I feel... because...' }] },
-        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Prompts to ponder 🤔' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• What is causing anxiety? How can I address it?' }] },
-        { type: 'paragraph', content: [{ type: 'text', text: '• What am I ignoring? What needs immediate attention?' }] }
+        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '🌙 My Dream & Sleep Catcher' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '💤 Sleep Overview' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• Hours slept: ___ | Quality: ⭐⭐⭐⭐⭐' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• Bedtime wind-down routine: ' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🌌 Dreamscape Records' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'I dreamt that... (colors, feelings, symbols): ' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🕯️ Bedtime Release' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'One thought or worry I want to release before sleep: ' }] }
+      ]
+    }
+  },
+  {
+    name: '🦄 Cute Weekly Reset',
+    category: 'Growth',
+    description: 'A delightful checklist to refresh your space, body, and plan for the new week.',
+    thumbnail: '🦄',
+    content: {
+      type: 'doc',
+      content: [
+        { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: '🦄 My Cozy Weekly Reset' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🏡 Refreshing My Space' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Open windows for fresh air 🌬️' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Wipe down desk and light a candle 🕯️' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Water my plant babies 🌿' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Tidy clothes and organize my bag 🧺' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '🛁 Loving My Body & Soul' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Hair mask and long hot shower 🚿' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Paint my nails a cute pastel color 💅' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• [ ] Stretch or go for a gentle sunset walk 🌅' }] },
+        { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: '📅 Planning the New Week' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• Main focus/theme for next week: ' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: '• A sweet treat or reward I will give myself: ' }] }
       ]
     }
   }

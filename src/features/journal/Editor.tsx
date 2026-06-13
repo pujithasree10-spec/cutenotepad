@@ -25,7 +25,9 @@ import {
   Tag,
   FolderOpen,
   Check,
+  Sparkles,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface EditorProps {
   note: Note;
@@ -43,6 +45,12 @@ export const Editor: React.FC<EditorProps> = ({ note, folders, onSave }) => {
   const [savingStatus, setSavingStatus] = useState<'saved' | 'saving' | 'error'>('saved');
 
   const saveTimeoutRef = useRef<any>(null);
+
+  const [showStickers, setShowStickers] = useState(false);
+
+  const CUTE_STICKERS = [
+    '🌸', '✨', '🎀', '🧸', '🐱', '🐰', '🦄', '🐼', '🌻', '🍓', '🧁', '🍪', '☕', '🍵', '🎨', '📚', '🎈', '🎉', '🎁', '💖', '💕', '🌙', '⭐', '🌈', '🌧️', '☀️', '🍀', '🦋', '🩰', '💌', '💤', '🕯️'
+  ];
 
   // Initialize TipTap
   const editor = useEditor({
@@ -263,113 +271,152 @@ export const Editor: React.FC<EditorProps> = ({ note, folders, onSave }) => {
       </div>
 
       {/* Editor Toolbar (Sticky top) */}
-      <div className="sticky top-0 z-10 border-y border-border-soft bg-surface/80 backdrop-blur-md px-4 py-2 flex items-center gap-1 flex-wrap">
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('bold') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Bold"
-        >
-          <Bold size={16} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('italic') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Italic"
-        >
-          <Italic size={16} />
-        </button>
+      <div className="sticky top-0 z-10 border-y border-border-soft bg-surface/80 backdrop-blur-md px-4 py-2 flex flex-col gap-2">
+        <div className="flex items-center gap-1 flex-wrap">
+          <button
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('bold') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Bold"
+          >
+            <Bold size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('italic') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Italic"
+          >
+            <Italic size={16} />
+          </button>
 
-        <div className="w-[1px] h-4 bg-border mx-1"></div>
+          <div className="w-[1px] h-4 bg-border mx-1"></div>
 
-        <button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('heading', { level: 1 }) ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Heading 1"
-        >
-          <Heading1 size={16} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('heading', { level: 2 }) ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Heading 2"
-        >
-          <Heading2 size={16} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('heading', { level: 3 }) ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Heading 3"
-        >
-          <Heading3 size={16} />
-        </button>
+          <button
+            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('heading', { level: 1 }) ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Heading 1"
+          >
+            <Heading1 size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('heading', { level: 2 }) ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Heading 2"
+          >
+            <Heading2 size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('heading', { level: 3 }) ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Heading 3"
+          >
+            <Heading3 size={16} />
+          </button>
 
-        <div className="w-[1px] h-4 bg-border mx-1"></div>
+          <div className="w-[1px] h-4 bg-border mx-1"></div>
 
-        <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('bulletList') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Bulleted List"
-        >
-          <List size={16} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('orderedList') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Numbered List"
-        >
-          <ListOrdered size={16} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleTaskList().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('taskList') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Task List"
-        >
-          <CheckSquare size={16} />
-        </button>
+          <button
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('bulletList') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Bulleted List"
+          >
+            <List size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('orderedList') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Numbered List"
+          >
+            <ListOrdered size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('taskList') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Task List"
+          >
+            <CheckSquare size={16} />
+          </button>
 
-        <div className="w-[1px] h-4 bg-border mx-1"></div>
+          <div className="w-[1px] h-4 bg-border mx-1"></div>
 
-        <button
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('blockquote') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Blockquote"
-        >
-          <Quote size={16} />
-        </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={`p-1.5 rounded hover:bg-white/5 transition ${
-            editor.isActive('codeBlock') ? 'text-accent bg-accent/10' : 'text-text-secondary'
-          }`}
-          title="Code Block"
-        >
-          <Code size={16} />
-        </button>
-        <button
-          onClick={handleAddImage}
-          className="p-1.5 rounded hover:bg-white/5 transition text-text-secondary"
-          title="Add Image"
-        >
-          <ImageIcon size={16} />
-        </button>
+          <button
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('blockquote') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Blockquote"
+          >
+            <Quote size={16} />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              editor.isActive('codeBlock') ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Code Block"
+          >
+            <Code size={16} />
+          </button>
+          <button
+            onClick={handleAddImage}
+            className="p-1.5 rounded hover:bg-white/5 transition text-text-secondary"
+            title="Add Image"
+          >
+            <ImageIcon size={16} />
+          </button>
+
+          <div className="w-[1px] h-4 bg-border mx-1"></div>
+
+          <button
+            onClick={() => setShowStickers(!showStickers)}
+            className={`p-1.5 rounded hover:bg-white/5 transition ${
+              showStickers ? 'text-accent bg-accent/10' : 'text-text-secondary'
+            }`}
+            title="Insert Cute Sticker"
+          >
+            <Sparkles size={16} />
+          </button>
+        </div>
+
+        {/* Stickers Panel */}
+        <AnimatePresence>
+          {showStickers && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="border-t border-border-soft pt-2 flex flex-wrap gap-2 max-h-24 overflow-y-auto"
+            >
+              {CUTE_STICKERS.map((sticker, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    editor.chain().focus().insertContent(sticker).run();
+                  }}
+                  className="text-xl p-1 hover:scale-125 transition-transform duration-100 cursor-pointer select-none bg-transparent border-none outline-none"
+                  title="Click to insert sticker"
+                >
+                  {sticker}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Editor Content Area */}

@@ -61,11 +61,393 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
+/* ─── ambient audio player ─────────────────────────────────── */
+
+class AmbientSoundPlayer {
+  private ctx: any = null;
+  private gainNode: any = null;
+  private noiseNode: any = null;
+  private currentSoundId: string | null = null;
+  private volume: number = 0.5;
+  private intervalId: any = null;
+  private activeNodes: any[] = [];
+
+  constructor() {}
+
+  init() {
+    if (!this.ctx) {
+      try {
+        const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        this.ctx = new AudioCtx();
+      } catch (e) {
+        console.error('Web Audio API not supported', e);
+      }
+    }
+  }
+
+  setVolume(vol: number) {
+    this.volume = vol;
+    if (this.gainNode && this.ctx) {
+      try {
+        this.gainNode.gain.setValueAtTime(vol, this.ctx.currentTime);
+      } catch {}
+    }
+  }
+
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    this.activeNodes.forEach((node) => {
+      try {
+        node.stop();
+      } catch {}
+    });
+    this.activeNodes = [];
+    if (this.noiseNode) {
+      try {
+        this.noiseNode.stop();
+      } catch {}
+      this.noiseNode = null;
+    }
+    this.currentSoundId = null;
+  }
+
+  play(soundId: string) {
+    this.init();
+    this.stop();
+    if (!this.ctx) return;
+
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+
+    this.currentSoundId = soundId;
+    
+    try {
+      this.gainNode = this.ctx.createGain();
+      this.gainNode.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+      this.gainNode.connect(this.ctx.destination);
+
+      if (soundId === 'whitenoise') {
+        this.playWhiteNoise();
+      } else if (soundId === 'rain') {
+        this.playRain();
+      } else if (soundId === 'ocean') {
+        this.playOcean();
+      } else if (soundId === 'forest') {
+        this.playForest();
+      } else if (soundId === 'cafe') {
+        this.playCafe();
+      } else if (soundId === 'lofi') {
+        this.playLofi();
+      }
+    } catch (e) {
+      console.error('Error playing ambient sound', e);
+    }
+  }
+
+  private createWhiteNoiseBuffer() {
+    if (!this.ctx) return null;
+    try {
+      const bufferSize = 2 * this.ctx.sampleRate;
+      const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+      return noiseBuffer;
+    } catch {
+      return null;
+    }
+  }
+
+  private playWhiteNoise() {
+    if (!this.ctx || !this.gainNode) return;
+    const buffer = this.createWhiteNoiseBuffer();
+    if (!buffer) return;
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+    noise.connect(this.gainNode);
+    noise.start();
+    this.noiseNode = noise;
+  }
+
+  private playRain() {
+    if (!this.ctx || !this.gainNode) return;
+    const buffer = this.createWhiteNoiseBuffer();
+    if (!buffer) return;
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1000, this.ctx.currentTime);
+
+    noise.connect(filter);
+    filter.connect(this.gainNode);
+    noise.start();
+    this.noiseNode = noise;
+
+    // Splatters LFO
+    this.intervalId = setInterval(() => {
+      if (!this.ctx || !filter || Math.random() > 0.4) return;
+      const now = this.ctx.currentTime;
+      filter.frequency.setValueAtTime(900 + Math.random() * 500, now);
+      filter.frequency.exponentialRampToValueAtTime(1000, now + 0.15);
+    }, 200);
+  }
+
+  private playOcean() {
+    if (!this.ctx || !this.gainNode) return;
+    const buffer = this.createWhiteNoiseBuffer();
+    if (!buffer) return;
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(350, this.ctx.currentTime);
+    filter.Q.setValueAtTime(1.5, this.ctx.currentTime);
+
+    const waveGain = this.ctx.createGain();
+    waveGain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+
+    noise.connect(filter);
+    filter.connect(waveGain);
+    waveGain.connect(this.gainNode);
+    noise.start();
+    this.noiseNode = noise;
+
+    let time = 0;
+    this.intervalId = setInterval(() => {
+      if (!this.ctx || !filter || !waveGain) return;
+      time += 0.1;
+      const wave = Math.sin((time * 2 * Math.PI) / 8); // 8 second cycle
+      const norm = (wave + 1) / 2; // 0 to 1
+      const now = this.ctx.currentTime;
+      filter.frequency.setValueAtTime(200 + norm * 300, now);
+      waveGain.gain.setValueAtTime(0.05 + norm * 0.45, now);
+    }, 100);
+  }
+
+  private playForest() {
+    if (!this.ctx || !this.gainNode) return;
+    const buffer = this.createWhiteNoiseBuffer();
+    if (!buffer) return;
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(250, this.ctx.currentTime);
+
+    const windGain = this.ctx.createGain();
+    windGain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+
+    noise.connect(filter);
+    filter.connect(windGain);
+    windGain.connect(this.gainNode);
+    noise.start();
+    this.noiseNode = noise;
+
+    // Wind modulation
+    let time = 0;
+    this.intervalId = setInterval(() => {
+      if (!this.ctx || !filter || Math.random() > 0.7) return;
+      time += 0.5;
+      const now = this.ctx.currentTime;
+      filter.frequency.exponentialRampToValueAtTime(200 + Math.sin(time) * 80 + Math.random() * 40, now + 0.5);
+    }, 600);
+
+    // Dynamic bird call chirps
+    const playChirp = () => {
+      if (!this.ctx || !this.gainNode || this.currentSoundId !== 'forest') return;
+      try {
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const oscGain = this.ctx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2400 + Math.random() * 600, now);
+        osc.frequency.exponentialRampToValueAtTime(3200 + Math.random() * 400, now + 0.05);
+        osc.frequency.exponentialRampToValueAtTime(2600 + Math.random() * 300, now + 0.1);
+        
+        oscGain.gain.setValueAtTime(0, now);
+        oscGain.gain.linearRampToValueAtTime(0.03, now + 0.02);
+        oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+        
+        osc.connect(oscGain);
+        oscGain.connect(this.gainNode);
+        
+        this.activeNodes.push(osc);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } catch {}
+    };
+
+    const scheduleNextBird = () => {
+      if (this.currentSoundId !== 'forest') return;
+      const delay = 4000 + Math.random() * 6000;
+      setTimeout(() => {
+        if (this.currentSoundId === 'forest') {
+          playChirp();
+          if (Math.random() > 0.6) setTimeout(playChirp, 200);
+          scheduleNextBird();
+        }
+      }, delay);
+    };
+    scheduleNextBird();
+  }
+
+  private playCafe() {
+    if (!this.ctx || !this.gainNode) return;
+    const buffer = this.createWhiteNoiseBuffer();
+    if (!buffer) return;
+
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(280, this.ctx.currentTime);
+    filter.Q.setValueAtTime(1.2, this.ctx.currentTime);
+
+    const cafeGain = this.ctx.createGain();
+    cafeGain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+
+    noise.connect(filter);
+    filter.connect(cafeGain);
+    cafeGain.connect(this.gainNode);
+    noise.start();
+    this.noiseNode = noise;
+
+    // Cup/spoon clinks
+    const playClink = () => {
+      if (!this.ctx || !this.gainNode || this.currentSoundId !== 'cafe') return;
+      try {
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const oscGain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(5500 + Math.random() * 2000, now);
+        
+        oscGain.gain.setValueAtTime(0, now);
+        oscGain.gain.linearRampToValueAtTime(0.015, now + 0.005);
+        oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+
+        osc.connect(oscGain);
+        oscGain.connect(this.gainNode);
+        
+        this.activeNodes.push(osc);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } catch {}
+    };
+
+    const scheduleNextClink = () => {
+      if (this.currentSoundId !== 'cafe') return;
+      const delay = 5000 + Math.random() * 7000;
+      setTimeout(() => {
+        if (this.currentSoundId === 'cafe') {
+          playClink();
+          scheduleNextClink();
+        }
+      }, delay);
+    };
+    scheduleNextClink();
+  }
+
+  private playLofi() {
+    if (!this.ctx || !this.gainNode) return;
+    const chords = [
+      [261.63, 329.63, 392.00, 493.88], // Cmaj7
+      [220.00, 261.63, 329.63, 392.00], // Am7
+      [349.23, 440.00, 523.25, 659.25], // Fmaj7
+      [392.00, 493.88, 587.33, 698.46]  // G7
+    ];
+    let chordIdx = 0;
+
+    const playChordStep = () => {
+      if (!this.ctx || !this.gainNode || this.currentSoundId !== 'lofi') return;
+      try {
+        const now = this.ctx.currentTime;
+        const currentChord = chords[chordIdx];
+        const duration = 6.0;
+
+        currentChord.forEach((freq, idx) => {
+          if (!this.ctx || !this.gainNode) return;
+          const osc = this.ctx.createOscillator();
+          const oscGain = this.ctx.createGain();
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          
+          oscGain.gain.setValueAtTime(0, now);
+          oscGain.gain.linearRampToValueAtTime(0.02, now + 0.4 + idx * 0.1);
+          oscGain.gain.setValueAtTime(0.02, now + duration - 1.5);
+          oscGain.gain.exponentialRampToValueAtTime(0.0001, now + duration - 0.1);
+          
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(550, now);
+          
+          osc.connect(filter);
+          filter.connect(oscGain);
+          oscGain.connect(this.gainNode);
+          
+          this.activeNodes.push(osc);
+          osc.start(now);
+          osc.stop(now + duration);
+        });
+
+        chordIdx = (chordIdx + 1) % chords.length;
+      } catch {}
+    };
+
+    playChordStep();
+    this.intervalId = setInterval(playChordStep, 6000);
+  }
+}
+
+const ambientPlayer = new AmbientSoundPlayer();
+
 /* ─── component ───────────────────────────────────────────── */
 
 export const Focus: React.FC = () => {
   const { user } = useAuthStore();
   const timer = useTimerStore();
+
+  // Control ambient sound playing state
+  useEffect(() => {
+    if (timer.isRunning && timer.soundUsed) {
+      ambientPlayer.play(timer.soundUsed);
+      ambientPlayer.setVolume(timer.volume);
+    } else {
+      ambientPlayer.stop();
+    }
+  }, [timer.isRunning, timer.soundUsed]);
+
+  useEffect(() => {
+    ambientPlayer.setVolume(timer.volume);
+  }, [timer.volume]);
+
+  useEffect(() => {
+    return () => {
+      ambientPlayer.stop();
+    };
+  }, []);
 
   const [todaySessions, setTodaySessions] = useState<FocusSession[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
