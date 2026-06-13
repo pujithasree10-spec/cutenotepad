@@ -91,7 +91,7 @@ export const Dashboard: React.FC = () => {
       setRecentNotes(notesData || []);
       setTodayMood(moodData || null);
 
-      const totalMins = (focusData || []).reduce((sum, s) => sum + (s.actual_minutes || 0), 0);
+      const totalMins = (focusData || []).reduce((sum: number, s: any) => sum + (s.actual_minutes || 0), 0);
       setFocusMinutes(totalMins);
     } catch (e) {
       console.error('Error fetching dashboard data:', e);

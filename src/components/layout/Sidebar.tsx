@@ -36,10 +36,11 @@ export const Sidebar: React.FC = () => {
       >
         {/* Brand / Logo */}
         <div className="flex items-center h-16 px-4 border-b border-border-soft overflow-hidden">
-          <span className="font-display text-2xl italic font-semibold text-accent whitespace-nowrap">
-            {sidebarCollapsed ? 'LN' : 'Life OS'}
+          <span className="font-display text-xl italic font-semibold text-accent whitespace-nowrap">
+            {sidebarCollapsed ? '🌸' : 'little pages'}
           </span>
         </div>
+
 
         {/* Navigation Items */}
         <nav className="flex-1 px-2 py-4 space-y-1">

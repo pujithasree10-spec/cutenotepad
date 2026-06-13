@@ -66,12 +66,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   init: () => {
     if (get().initialized) return;
 
-    // Apply cached theme initially
-    const localTheme = localStorage.getItem('lifeos_theme') || 'dark';
+    // Apply cached theme initially (default: light)
+    const localTheme = localStorage.getItem('lifeos_theme') || 'light';
     document.documentElement.setAttribute('data-theme', localTheme);
 
     // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then((res: any) => {
+      const session = res?.data?.session;
       if (session) {
         set({ user: session.user });
         get().fetchProfile(session.user.id).then((profile) => {
@@ -86,7 +87,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     });
 
     // Listen for auth changes
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((_event: any, session: any) => {
       if (session) {
         set({ user: session.user });
         get().fetchProfile(session.user.id).then((profile) => {
