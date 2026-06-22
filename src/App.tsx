@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 import { PrivateRoute } from './components/layout/PrivateRoute';
 import { Layout } from './components/layout/Layout';
 import { Login } from './app/Login';
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
+      <VercelAnalytics />
     </BrowserRouter>
   );
 };
