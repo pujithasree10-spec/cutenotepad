@@ -124,6 +124,7 @@ export const Dashboard: React.FC = () => {
       } else {
         await supabase.from('habit_logs').insert({
           habit_id: habitId,
+          user_id: user.id,
           completed_at: todayStr,
         });
       }
@@ -181,6 +182,7 @@ export const Dashboard: React.FC = () => {
       const { data: moodData } = await supabase
         .from('mood_logs')
         .select('*')
+        .eq('user_id', user.id)
         .eq('logged_at', todayStr)
         .maybeSingle();
       setTodayMood(moodData || null);

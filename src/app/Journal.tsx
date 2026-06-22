@@ -3,7 +3,7 @@ import { PageWrapper } from '../components/layout/PageWrapper';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { Note, Folder } from '../types';
-import { Editor } from '../features/journal/Editor';
+import { ScrapbookCanvas } from '../features/journal/ScrapbookCanvas';
 import { TemplateGallery } from '../features/journal/TemplateGallery';
 import {
   FolderPlus,
@@ -376,9 +376,8 @@ export const Journal: React.FC = () => {
 
           {selectedNote ? (
             <div className="flex-1 overflow-y-auto">
-              <Editor
+              <ScrapbookCanvas
                 note={selectedNote}
-                folders={folders}
                 onSave={handleSaveNote}
               />
             </div>
