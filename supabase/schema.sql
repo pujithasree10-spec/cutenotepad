@@ -15,8 +15,13 @@ create table if not exists public.profiles (
 
 -- Set up Row Level Security (RLS)
 alter table public.profiles enable row level security;
+drop policy if exists "Users can view own profile" on profiles;
 create policy "Users can view own profile" on profiles for select using (auth.uid() = id);
+
+drop policy if exists "Users can update own profile" on profiles;
 create policy "Users can update own profile" on profiles for update using (auth.uid() = id);
+
+drop policy if exists "Users can insert own profile" on profiles;
 create policy "Users can insert own profile" on profiles for insert with check (auth.uid() = id);
 
 -- Trigger to create profile on user signup
@@ -48,6 +53,7 @@ create table if not exists public.folders (
 );
 
 alter table public.folders enable row level security;
+drop policy if exists "Users manage own folders" on folders;
 create policy "Users manage own folders" on folders for all using (auth.uid() = user_id);
 
 -- 3. Notes (Journal) Table
@@ -67,6 +73,7 @@ create table if not exists public.notes (
 );
 
 alter table public.notes enable row level security;
+drop policy if exists "Users manage own notes" on notes;
 create policy "Users manage own notes" on notes for all using (auth.uid() = user_id);
 
 -- 4. Habits Table
@@ -85,6 +92,7 @@ create table if not exists public.habits (
 );
 
 alter table public.habits enable row level security;
+drop policy if exists "Users manage own habits" on habits;
 create policy "Users manage own habits" on habits for all using (auth.uid() = user_id);
 
 -- 5. Habit Logs Table
@@ -98,6 +106,7 @@ create table if not exists public.habit_logs (
 );
 
 alter table public.habit_logs enable row level security;
+drop policy if exists "Users manage own habit logs" on habit_logs;
 create policy "Users manage own habit logs" on habit_logs for all using (auth.uid() = user_id);
 
 -- 6. Tasks Table
@@ -118,6 +127,7 @@ create table if not exists public.tasks (
 );
 
 alter table public.tasks enable row level security;
+drop policy if exists "Users manage own tasks" on tasks;
 create policy "Users manage own tasks" on tasks for all using (auth.uid() = user_id);
 
 -- 7. Focus Sessions Table
@@ -135,6 +145,7 @@ create table if not exists public.focus_sessions (
 );
 
 alter table public.focus_sessions enable row level security;
+drop policy if exists "Users manage own focus sessions" on focus_sessions;
 create policy "Users manage own focus sessions" on focus_sessions for all using (auth.uid() = user_id);
 
 -- 8. Mood Logs Table
@@ -149,6 +160,7 @@ create table if not exists public.mood_logs (
 );
 
 alter table public.mood_logs enable row level security;
+drop policy if exists "Users manage own mood logs" on mood_logs;
 create policy "Users manage own mood logs" on mood_logs for all using (auth.uid() = user_id);
 
 -- 9. Templates Table
@@ -166,9 +178,16 @@ create table if not exists public.templates (
 );
 
 alter table public.templates enable row level security;
+drop policy if exists "Users view system templates and own templates" on templates;
 create policy "Users view system templates and own templates" on templates for select using (is_system = true or auth.uid() = user_id);
+
+drop policy if exists "Users manage own templates" on templates;
 create policy "Users manage own templates" on templates for insert with check (auth.uid() = user_id);
+
+drop policy if exists "Users manage own templates update" on templates;
 create policy "Users manage own templates update" on templates for update using (auth.uid() = user_id);
+
+drop policy if exists "Users manage own templates delete" on templates;
 create policy "Users manage own templates delete" on templates for delete using (auth.uid() = user_id);
 
 -- Realtime subscriptions
