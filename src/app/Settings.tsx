@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { PageWrapper } from '../components/layout/PageWrapper';
 import { motion } from 'framer-motion';
 import { Key, Sparkles, Check, Save } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
 
 export const Settings: React.FC = () => {
   const [openAiKey, setOpenAiKey] = useState('');
