@@ -45,6 +45,7 @@ import { PageWrapper } from '../components/layout/PageWrapper';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import type { Task } from '../types';
+import { breakdownTask } from '../lib/ai';
 
 // ─── Constants ──────────────────────────────────────────────────────
 const STORAGE_KEY = 'lifeos_tasks';
@@ -691,6 +692,26 @@ const TaskModal: React.FC<{
   const [dueDate, setDueDate] = useState(task?.due_date || '');
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>(task?.tags || []);
+  const [isAILoading, setIsAILoading] = useState(false);
+
+  const handleAIBreakdown = async () => {
+    if (!title.trim()) return;
+    setIsAILoading(true);
+    try {
+      const subtasks = await breakdownTask(title, description);
+      if (subtasks.length > 0) {
+        const subtasksText = subtasks.map(t => `- [ ] ${t}`).join('\n');
+        setDescription(prev => {
+          const base = prev.trim();
+          return base ? `${base}\n\n${subtasksText}` : subtasksText;
+        });
+      }
+    } catch (err: any) {
+      alert(err.message || 'Failed to breakdown task.');
+    } finally {
+      setIsAILoading(false);
+    }
+  };
 
   const handleAddTag = () => {
     const trimmed = tagInput.trim().toLowerCase();
@@ -803,6 +824,15 @@ const TaskModal: React.FC<{
               className="w-full px-3.5 py-2.5 text-sm outline-none focus:border-accent transition-colors resize-none"
               style={inputStyle}
             />
+            <button
+              type="button"
+              onClick={handleAIBreakdown}
+              disabled={isAILoading || !title.trim()}
+              className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors bg-accent/10 text-accent hover:bg-accent/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Sparkles size={14} className={isAILoading ? "animate-pulse" : ""} />
+              {isAILoading ? 'Thinking...' : 'AI Breakdown'}
+            </button>
           </div>
 
           {/* Priority & Status row */}

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { Habit, HabitLog } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import {
   Plus,
   X,
@@ -1261,6 +1262,14 @@ export const Habits: React.FC = () => {
       if (habit) {
         const newStreak = calculateStreak(habitId, updatedLogs);
         checkMilestone(habit.name, newStreak.current);
+        
+        // Fire confetti!
+        confetti({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: [habit.color, '#FFD700', '#FF69B4']
+        });
       }
     }
 

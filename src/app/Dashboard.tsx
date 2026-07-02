@@ -8,8 +8,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   ChevronRight,
   Flame,
-  Check
+  Check,
+  Sparkles
 } from 'lucide-react';
+import { getDailyCoachMessage } from '../lib/ai';
 
 export const Dashboard: React.FC = () => {
   const { user, profile } = useAuthStore();
@@ -24,6 +26,8 @@ export const Dashboard: React.FC = () => {
   const [todayMood, setTodayMood] = useState<MoodLog | null>(null);
   const [focusMinutes, setFocusMinutes] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [coachMessage, setCoachMessage] = useState<string | null>(null);
+  const [coachLoading, setCoachLoading] = useState(false);
 
   const moodOptions = [
     { value: 1, emoji: '😢', label: 'Awful' },
@@ -93,6 +97,22 @@ export const Dashboard: React.FC = () => {
 
       const totalMins = (focusData || []).reduce((sum: number, s: any) => sum + (s.actual_minutes || 0), 0);
       setFocusMinutes(totalMins);
+
+      // Fetch AI Coach Message
+      setCoachLoading(true);
+      try {
+        const msg = await getDailyCoachMessage({
+          totalTasks: (tasksData || []).length,
+          habitsCompleted: (logsData || []).length,
+          avgMood: moodData ? moodData.mood : 3,
+        });
+        setCoachMessage(msg);
+      } catch (e) {
+        setCoachMessage('You are doing amazing today! ✨');
+      } finally {
+        setCoachLoading(false);
+      }
+      
     } catch (e) {
       console.error('Error fetching dashboard data:', e);
     } finally {
@@ -226,9 +246,10 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
         {/* Greetings */}
-        <div className="md:col-span-8 bg-surface border border-border rounded-lg p-6 flex flex-col justify-between min-h-[160px] card-hover-effect">
-          <div>
-            <h2 className="font-display text-4xl italic text-text-primary mb-2">
+        <div className="md:col-span-8 space-y-6">
+          <div className="bg-surface border border-border rounded-lg p-6 flex flex-col justify-between min-h-[160px] card-hover-effect">
+            <div>
+              <h2 className="font-display text-4xl italic text-text-primary mb-2">
               {getGreeting()}, {profile?.name || 'Explorer'}
             </h2>
             <p className="text-text-secondary text-sm">
@@ -239,6 +260,20 @@ export const Dashboard: React.FC = () => {
             <span className="flex items-center gap-1">
               <Flame size={14} className="text-accent" /> Active Streak: {habitLogs.length > 0 ? '1 day' : '0 days'}
             </span>
+          </div>
+          </div>
+          
+          {/* AI Life Coach */}
+          <div className="bg-accent/10 border border-accent/20 rounded-lg p-5 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-accent flex-shrink-0 flex items-center justify-center text-white shadow-sm">
+              <Sparkles size={20} className={coachLoading ? "animate-pulse" : ""} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-accent mb-1">AI Life Coach</h3>
+              <p className="text-sm text-text-primary leading-relaxed">
+                {coachLoading ? 'Analyzing your day...' : coachMessage}
+              </p>
+            </div>
           </div>
         </div>
 

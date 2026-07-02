@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { PrivateRoute } from './components/layout/PrivateRoute';
 import { Layout } from './components/layout/Layout';
 import { Login } from './app/Login';
@@ -11,10 +12,11 @@ import { Focus } from './app/Focus';
 import { Analytics } from './app/Analytics';
 import { Settings } from './app/Settings';
 
-const App: React.FC = () => {
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<Login />} />
         <Route
           path="/"
@@ -33,6 +35,14 @@ const App: React.FC = () => {
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
+    </AnimatePresence>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
     </BrowserRouter>
   );
 };
